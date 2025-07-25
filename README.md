@@ -39,63 +39,73 @@
 ### 1.1. Восстановление данных за предыдущий день
 **Решение:** Полное резервное копирование (Full Backup)  
 **Команды:**
-```bash
+
 # Для PostgreSQL
+```
 pg_dump -U username -d dbname -F c -f full_backup.dump
-
+```
 # Для MySQL
+```
 mysqldump -u root -p --all-databases > full_backup.sql
-
+```
 1.2. Восстановление данных за час до поломки
 Решение: Комбинация инкрементного бэкапа + WAL/binlog
 Команды:
 
 # PostgreSQL (WAL)
+```
 pg_basebackup -U username -D /backup_location -Ft -z
-
+```
 # MySQL (binlog)
+```
 mysqlbinlog --start-datetime="2024-01-01 12:00:00" mysql-bin.000123 > incr_backup.sql
-
+```
 
 1.3. Моментальное переключение при поломке
 Решение: Репликация с автоматическим failover
 Инструменты:
 
-PostgreSQL: Patroni + etcd
+``PostgreSQL: Patroni + etcd``
 
-MySQL: Group Replication + MySQL Router
+``MySQL: Group Replication + MySQL Router``
 
 Задание 2. PostgreSQL
 2.1. Резервирование и восстановление
 Полный бэкап:
 
-bash
+```
 pg_dump -U postgres -d mydb -F c -f mydb_backup.dump
+```
 Восстановление:
 
-bash
+```
 pg_restore -U postgres -d mydb -C mydb_backup.dump
+```
 2.2. Автоматизация
 Пример скрипта для cron:
-
-bash
+```
 #!/bin/bash
 DATE=$(date +%Y-%m-%d)
 pg_dump -U postgres -d mydb -F c -f /backups/mydb_$DATE.dump
 find /backups -type f -name "*.dump" -mtime +7 -delete
+```
+
 Задание 3. MySQL
 3.1. Инкрементное копирование
 Настройка в my.cnf:
 
-ini
 
+```
 [mysqld]
+
 log-bin=mysql-bin
 binlog-format=ROW
+```
 Извлечение изменений:
+```
 
-bash
 mysqlbinlog --start-position=4 --stop-position=123 mysql-bin.000001 > incr_backup.sql
+```
 3.2. Преимущества репликации
 Нулевое время восстановления при failover
 

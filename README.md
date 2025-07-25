@@ -69,7 +69,7 @@ mysqlbinlog --start-datetime="2024-01-01 12:00:00" mysql-bin.000123 > incr_backu
 
 ``MySQL: Group Replication + MySQL Router``
 
-Задание 2. PostgreSQL
+## Задание 2. PostgreSQL
 2.1. Резервирование и восстановление
 Полный бэкап:
 
@@ -90,7 +90,7 @@ pg_dump -U postgres -d mydb -F c -f /backups/mydb_$DATE.dump
 find /backups -type f -name "*.dump" -mtime +7 -delete
 ```
 
-Задание 3. MySQL
+## Задание 3. MySQL
 3.1. Инкрементное копирование
 Настройка в my.cnf:
 
